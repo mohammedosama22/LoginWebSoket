@@ -1,0 +1,35 @@
+
+<div style="width:597px;margin:34px 23px 0px 295px ; padding: 4px 77px 0px 188px" >
+<h2 align="center" >Sign in </h2>
+
+
+<form [formGroup]="form"  (ngSubmit)="login()"   [ngStyle]="{'background-image': 'url(assets/1.jpg)'}">
+  <div class="row" >
+    <div class=" col-md-offset-1 col-md-4" style="width: 300px">
+      <label for="email"> Email </label>
+      <input id="email" formControlName="email" class="form-control" type="text" >
+    </div>
+  </div>
+
+  <div class="row">
+    <div class=" col-md-offset-1 col-md-4" style="width: 300px">
+      <label for="password"> Password </label>
+      <input id ="password" formControlName="password" class="form-control" type="password">
+    </div>
+  </div>
+
+  <div class="row" style="margin-top: 40px;">
+    <div class="col-md-offset-1 col-md-4">
+      <button class="btn btn-md btn-style"  style="width:100px;height: 41px;margin: -23px 0px 0px 83px" >login</button>
+    </div>
+  </div>
+
+
+  <!-- Register -->
+  <div class="container signin">
+  <p >Not a member?
+    <a routerLink="/Rgister">Register</a>
+  </p>
+  </div>
+</form>
+</div>
