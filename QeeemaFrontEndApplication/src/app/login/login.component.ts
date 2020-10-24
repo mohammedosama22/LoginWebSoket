@@ -4,6 +4,7 @@ import {User} from "../user";
 import {LoginService} from "./login.service";
 import {Router} from "@angular/router";
 import {debounce} from "rxjs/internal/operators";
+import {WebSocketAPI} from "../webSocket";
 
 @Component({
   selector: 'app-login',
@@ -15,13 +16,15 @@ import {debounce} from "rxjs/internal/operators";
 export class LoginComponent implements OnInit {
 
 
-  constructor(private loginService : LoginService, private router : Router) { }
+  constructor(private loginService : LoginService, private router : Router ,private webSocketAPI:WebSocketAPI ) { }
 
   ngOnInit() {
   }
 
    user:User =new User();
-   form = new FormGroup({
+  body:any;
+  token:any;
+  form = new FormGroup({
     email : new FormControl('' , Validators.required),
     password : new FormControl('' , Validators.required),
   });
@@ -33,10 +36,15 @@ export class LoginComponent implements OnInit {
       this.user.password = this.form.get('password').value;
 
     this.loginService.login(this.user).subscribe(res =>{
-        localStorage.setItem('email',this.user.email);
+        this.body=res.body;
+        this.token=this.body.token;
+        localStorage.setItem('token',this.token);
+        localStorage.setItem('email', this.user.email);
         this.router.navigate(['/Dashboard']);
         console.log("Response",res);
         //alert("Login Sucees");
+      this.webSocketAPI._send("Go To Home Now");
+
 
       },
       error => {
