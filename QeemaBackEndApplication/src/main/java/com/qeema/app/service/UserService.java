@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.qeema.app.entity.Users;
 import com.qeema.app.repository.UserRepository;
+import com.qeema.dto.UserDto;
 
 @Service
 public class UserService {
@@ -54,22 +56,23 @@ public class UserService {
 	}
 
 	public ResponseEntity<?> verfiyUserNameAndPassword(Users request) {
-		try {
-			List<Users> usersList = null;
-			usersList = userRepository.findAll();
-			for (Users user : usersList) {
-				if (user.getEmail().equalsIgnoreCase(request.getEmail())
-						&& user.getPassword().equalsIgnoreCase(request.getPassword())) {
+		    Users user = new Users();
+			String token = UUID.randomUUID().toString();
+			user = userRepository.getUserByUserName(request.getEmail(), request.getPassword()); 
+			
+				if (user != null) {
 					user.setIsLogged(true);
+					user.setToken(token);
 					userRepository.save(user);
-					return new ResponseEntity<>(user, HttpStatus.OK);
-				}
-			}
-			return new ResponseEntity<>("inCorrect Email And Password", HttpStatus.BAD_REQUEST);
-
-		} catch (Exception e) {
-			return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+					
+					UserDto dto = new UserDto();
+					dto.setEmail(user.getEmail());
+					dto.setToken(user.getToken());
+				  return new ResponseEntity<>(dto, HttpStatus.OK);
 		}
+				else {
+					  return new ResponseEntity<>("Not Found", HttpStatus.BAD_REQUEST);
+				}
 	}
 
 	public ResponseEntity<?> logout(String email) {

@@ -29,9 +29,9 @@ public interface UserRepository extends JpaRepository<Users, Long> {
 	 * deleteUserByUserName(@Param ("username") String username);
 	 */
 
-	/*
-	 * @Query("select s from Users s where s.username=:username") public Users
-	 * getUserByUserName(@Param ("username") String username);
-	 */
+	
+	  @Query("select  s from Users s where s.email=:email and s.password=:password") 
+	  public Users getUserByUserName(@Param ("email") String email , @Param("password") String password);
+	 
 
 }

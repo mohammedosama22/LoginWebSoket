@@ -19,6 +19,7 @@ import org.springframework.web.util.HtmlUtils;
 import com.qeema.app.entity.Users;
 import com.qeema.app.service.UserService;
 import com.qeema.app.soket.Output;
+import com.qeema.dto.UserDto;
 
 @CrossOrigin
 @RestController
@@ -57,11 +58,10 @@ public class UserController {
         try {
 
         	ResponseEntity<?> user = userService.verfiyUserNameAndPassword(request);
-             if (user != null)
-             {
+            
             this.template.convertAndSend("/topic/getUsers", userService.getTotalNumberOfUsers());
-             }
-             return user;
+             
+            return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
         }
