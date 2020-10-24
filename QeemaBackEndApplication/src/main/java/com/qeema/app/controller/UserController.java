@@ -58,10 +58,13 @@ public class UserController {
         try {
 
         	ResponseEntity<?> user = userService.verfiyUserNameAndPassword(request);
-            
-            this.template.convertAndSend("/topic/getUsers", userService.getTotalNumberOfUsers());
-             
-            return new ResponseEntity<>(user, HttpStatus.OK);
+            if(user.getBody().equals("Not Found")) {
+                return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+            }
+            else {
+                this.template.convertAndSend("/topic/getUsers", userService.getTotalNumberOfUsers());     
+                return new ResponseEntity<>(user, HttpStatus.OK);
+            }
         } catch (Exception e) {
             return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
         }
